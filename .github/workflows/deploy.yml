@@ -3,7 +3,7 @@ name: Deploy Application
 on:
   push:
     branches:
-      - main # Triggers on push to the main branch
+      - main
 
 jobs:
   deploy:
@@ -18,7 +18,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /var/www/your-app-directory # Replace with your project folder path
+            export PATH=$PATH:/usr/bin:/usr/local/bin:~/.nvm/versions/node/$(ls ~/.nvm/versions/node 2>/dev/null | tail -n 1)/bin
+            source ~/.bashrc || true
+
+            # Paste your exact path here:
+            cd /home/ec2-user/your-folder-name
+
             git pull origin main
-            npm install                    # Adjust if using yarn/pip/docker
-            pm2 restart all || pm2 start index.js --name "app" # Adjust to your process manager
+            npm install
+            pm2 restart all || pm2 start index.js --name "app"
