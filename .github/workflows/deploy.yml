@@ -18,16 +18,15 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            # Load NVM & Node environment
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            # Ensure system binaries are in PATH
+            export PATH=$PATH:/usr/bin:/usr/local/bin
 
-            # Navigate to project
+            # Navigate to project directory
             cd /home/ec2-user/EC2-Instance
 
-            # Pull latest changes & install dependencies
+            # Pull latest code and update dependencies
             git pull origin main
             npm install
 
-            # Restart/Start application
+            # Restart application with PM2
             pm2 restart all || pm2 start index.js --name "app"
